@@ -14,6 +14,7 @@ import org.scalajs.dom.*
   columnDemoIO()
   rowDemoIO()
   freeBoxDemoIO()
+  alphaDemoIO()
 
   val img = document
     .createElement("img")
@@ -164,6 +165,12 @@ def spriteFrameComponentDemoIO(sprite: Sprite): Unit =
   )
 
   spriteFrameComponent.renderIO(5, 5)(renderer)
+
+def alphaDemoIO(): Unit =
+  val renderer = Renderer(canvasIO("c-alpha-demo"))
+  val text = Component.Text("Greetings, world!")
+  val alpha = Component.Alpha(Some(text), 0.5)
+  alpha.renderIO(5, 5)(renderer)
 
 def canvasIO(id: String): HTMLCanvasElement =
   document

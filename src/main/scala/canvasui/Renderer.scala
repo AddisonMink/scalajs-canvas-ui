@@ -97,6 +97,12 @@ class Renderer(canvas: HTMLCanvasElement, sprites: Map[String, Sprite] = Map()):
       sprite.canvasFrameHeight
     )
 
+  def setAlphaIO(alpha: Double): Unit =
+    ctx.globalAlpha = alpha
+
+  def resetAlphaIO(): Unit =
+    setAlphaIO(1)
+
   private def roundedRectPathIO(
       x: Int,
       y: Int,

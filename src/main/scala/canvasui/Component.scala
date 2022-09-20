@@ -45,6 +45,12 @@ enum Component:
       style: Style = Style()
   )
 
+  case Alpha(
+      contents: Option[Component] = None,
+      alpha: Double = 0,
+      style: Style = Style()
+  )
+
   /* A Renderer is required to get a Component's
    * Size. The value needs to be memoized in order
    * to avoid a lot of redundant computation.
@@ -96,6 +102,9 @@ enum Component:
         val width = contentsWidth + marginWidth
         val height = contents.map(_.sizeIO(r).height).maxOption.getOrElse(0)
         Size(width, height)
+
+      case Alpha(contents, _, _) =>
+        contents.fold(Size(0, 0))(_.sizeIO(r))
 
   def renderIO(x: Int, y: Int)(r: Renderer): Unit =
     this match
@@ -161,6 +170,11 @@ enum Component:
           c.renderIO(x + offset, y)(r)
           offset + c.sizeIO(r).width + style.rowMargin
         }
+
+      case Alpha(contents, alpha, _) =>
+        r.setAlphaIO(alpha)
+        contents.foreach(_.renderIO(x, y)(r))
+        r.resetAlphaIO()
 
 object Component:
   case class Size(width: Int, height: Int)
