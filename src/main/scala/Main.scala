@@ -10,6 +10,17 @@ import org.scalajs.dom.*
   roundedRectOutlineDemoIO()
   monospaceTextDemoIO()
 
+  val img = document
+    .createElement("img")
+    .asInstanceOf[HTMLImageElement]
+
+  val sprite = Sprite("sprite", img, 100, 100, 200, 200, 100, 100)
+  img.onload = { _ =>
+    spriteDemoIO(sprite)
+    spriteFrameDemoIO(sprite)
+  }
+  img.src = "images/goblin.png"
+
 def clearDemoIO(): Unit =
   val renderer = Renderer(canvasIO("clear-demo"))
   renderer.clearIO(Color.black)
@@ -42,6 +53,16 @@ def monospaceTextDemoIO(): Unit =
   val (width, height) = renderer.measureTextIO(text, font)
   renderer.rectIO(0, 0, width, height, Color.black)
   renderer.textIO(0, 0, text, font, Color.white)
+
+def spriteDemoIO(sprite: Sprite): Unit =
+  val renderer = Renderer(canvasIO("sprite-demo"))
+  renderer.clearIO(Color.black)
+  renderer.spriteIO(0, 0, sprite)
+
+def spriteFrameDemoIO(sprite: Sprite): Unit =
+  val renderer = Renderer(canvasIO("sprite-frame-demo"))
+  renderer.clearIO(Color.black)
+  renderer.spriteFrameIO(0, 0, sprite, (1, 1))
 
 def canvasIO(id: String): HTMLCanvasElement =
   document

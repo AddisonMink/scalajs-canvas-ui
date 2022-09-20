@@ -63,6 +63,32 @@ class Renderer(canvas: HTMLCanvasElement):
     val trueY = y + font.lineHeight + font.baseLineOffset
     ctx.fillText(text, x, trueY)
 
+  def spriteIO(x: Int, y: Int, sprite: Sprite): Unit =
+    ctx.drawImage(
+      sprite.img,
+      0,
+      0,
+      sprite.img.width,
+      sprite.img.height,
+      0,
+      0,
+      sprite.canvasWidth,
+      sprite.canvasHeight
+    )
+
+  def spriteFrameIO(x: Int, y: Int, sprite: Sprite, index: (Int, Int)): Unit =
+    ctx.drawImage(
+      sprite.img,
+      sprite.frameWidth * index._1,
+      sprite.frameHeight * index._2,
+      sprite.frameWidth,
+      sprite.frameHeight,
+      0,
+      0,
+      sprite.canvasFrameWidth,
+      sprite.canvasFrameHeight
+    )
+
   private def roundedRectPathIO(
       x: Int,
       y: Int,
