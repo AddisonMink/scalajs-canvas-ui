@@ -53,6 +53,16 @@ class Renderer(canvas: HTMLCanvasElement):
     roundedRectPathIO(x, y, width, height, radius)
     ctx.stroke()
 
+  def measureTextIO(text: String, font: Font): (Int, Int) =
+    ctx.font = font.cssCode
+    val width = ctx.measureText(text).width.toInt
+    (width, font.lineHeight)
+
+  def textIO(x: Int, y: Int, text: String, font: Font, color: Color): Unit =
+    ctx.fillStyle = color.cssCode
+    val trueY = y + font.lineHeight + font.baseLineOffset
+    ctx.fillText(text, x, trueY)
+
   private def roundedRectPathIO(
       x: Int,
       y: Int,
