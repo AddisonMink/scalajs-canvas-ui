@@ -8,6 +8,19 @@ enum Component:
       style: Style = Style()
   )
 
+  case Sprite(
+      name: String,
+      width: Int,
+      height: Int
+  )
+
+  case SpriteFrame(
+      name: String,
+      width: Int,
+      height: Int,
+      index: (Int, Int)
+  )
+
   case StretchBox(
       minWidth: Int = 0,
       minHeight: Int = 0,
@@ -50,6 +63,12 @@ enum Component:
         val (w, h) = r.measureTextIO(text, style.font)
         Size(w, h)
 
+      case Sprite(_, width, height) =>
+        Size(width, height)
+
+      case SpriteFrame(_, width, height, _) =>
+        Size(width, height)
+
       case StretchBox(minWidth, minHeight, contents, style) =>
         val Size(cWidth, cHeight) =
           contents.fold(Size(minWidth, minHeight))(_.sizeIO(r))
@@ -83,6 +102,12 @@ enum Component:
       case Text(text, style) =>
         r.textIO(x, y, text, style.font, style.color)
         val (w, h) = r.measureTextIO(text, style.font)
+
+      case Sprite(name, _, _) =>
+        r.spriteIO(x, y, name)
+
+      case SpriteFrame(name, _, _, index) =>
+        r.spriteFrameIO(x, y, name, index)
 
       case StretchBox(minWidth, minHeight, contents, style) =>
         val Size(cWidth, cHeight) = contents.fold(Size(0, 0))(_.sizeIO(r))

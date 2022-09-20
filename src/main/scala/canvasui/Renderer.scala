@@ -2,7 +2,7 @@ package canvasui
 
 import org.scalajs.dom.*
 
-class Renderer(canvas: HTMLCanvasElement):
+class Renderer(canvas: HTMLCanvasElement, sprites: Map[String, Sprite] = Map()):
   private val ctx = canvas
     .getContext("2d")
     .asInstanceOf[CanvasRenderingContext2D]
@@ -64,7 +64,8 @@ class Renderer(canvas: HTMLCanvasElement):
     val trueY = y + font.lineHeight + font.baseLineOffset
     ctx.fillText(text, x, trueY)
 
-  def spriteIO(x: Int, y: Int, sprite: Sprite): Unit =
+  def spriteIO(x: Int, y: Int, spriteName: String): Unit =
+    val sprite = sprites(spriteName)
     ctx.drawImage(
       sprite.img,
       0,
@@ -77,7 +78,13 @@ class Renderer(canvas: HTMLCanvasElement):
       sprite.canvasHeight
     )
 
-  def spriteFrameIO(x: Int, y: Int, sprite: Sprite, index: (Int, Int)): Unit =
+  def spriteFrameIO(
+      x: Int,
+      y: Int,
+      spriteName: String,
+      index: (Int, Int)
+  ): Unit =
+    val sprite = sprites(spriteName)
     ctx.drawImage(
       sprite.img,
       sprite.frameWidth * index._1,

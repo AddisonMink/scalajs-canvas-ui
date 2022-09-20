@@ -23,6 +23,8 @@ import org.scalajs.dom.*
   img.onload = { _ =>
     spriteDemoIO(sprite)
     spriteFrameDemoIO(sprite)
+    spriteComponentDemoIO(sprite)
+    spriteFrameComponentDemoIO(sprite)
   }
   img.src = "images/goblin.png"
 
@@ -60,14 +62,18 @@ def monospaceTextDemoIO(): Unit =
   renderer.textIO(0, 0, text, font, Color.white)
 
 def spriteDemoIO(sprite: Sprite): Unit =
-  val renderer = Renderer(canvasIO("sprite-demo"))
+  val renderer = Renderer(canvasIO("sprite-demo"), Map(sprite.name -> sprite))
   renderer.clearIO(Color.black)
-  renderer.spriteIO(0, 0, sprite)
+  renderer.spriteIO(0, 0, sprite.name)
 
 def spriteFrameDemoIO(sprite: Sprite): Unit =
-  val renderer = Renderer(canvasIO("sprite-frame-demo"))
+  val renderer = Renderer(
+    canvasIO("sprite-frame-demo"),
+    Map(sprite.name -> sprite)
+  )
+
   renderer.clearIO(Color.black)
-  renderer.spriteFrameIO(0, 0, sprite, (1, 1))
+  renderer.spriteFrameIO(0, 0, sprite.name, (1, 1))
 
 def textDemoIO(): Unit =
   val renderer = Renderer(canvasIO("c-text-demo"))
@@ -135,6 +141,29 @@ def freeBoxDemoIO(): Unit =
   )
 
   box.renderIO(10, 5)(renderer)
+
+def spriteComponentDemoIO(sprite: Sprite): Unit =
+  val renderer = Renderer(canvasIO("c-sprite-demo"), Map(sprite.name -> sprite))
+
+  val spriteComponent =
+    Component.Sprite(sprite.name, sprite.canvasWidth, sprite.canvasHeight)
+
+  spriteComponent.renderIO(5, 5)(renderer)
+
+def spriteFrameComponentDemoIO(sprite: Sprite): Unit =
+  val renderer = Renderer(
+    canvasIO("c-sprite-frame-demo"),
+    Map(sprite.name -> sprite)
+  )
+
+  val spriteFrameComponent = Component.SpriteFrame(
+    sprite.name,
+    sprite.canvasFrameWidth,
+    sprite.canvasFrameHeight,
+    (1, 1)
+  )
+
+  spriteFrameComponent.renderIO(5, 5)(renderer)
 
 def canvasIO(id: String): HTMLCanvasElement =
   document
