@@ -2,7 +2,7 @@ import amink.canvasui.*
 
 import org.scalajs.dom.*
 
-@main def main: Unit =
+def main: Unit =
   clearDemoIO()
   rectDemoIO()
   rectOutlineDemoIO()
