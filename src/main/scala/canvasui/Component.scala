@@ -178,3 +178,37 @@ enum Component:
 
 object Component:
   case class Size(width: Int, height: Int)
+
+  def text(txt: String)(s: Style): Text = Text(txt, s)
+
+  def sprite(sprite: canvasui.Sprite)(s: Style): Sprite =
+    Sprite(sprite.name, sprite.canvasWidth, sprite.canvasHeight)
+
+  def spriteFrame(sprite: canvasui.Sprite, index: (0, 0))(
+      s: Style
+  ): SpriteFrame =
+    SpriteFrame(
+      sprite.name,
+      sprite.canvasFrameWidth,
+      sprite.canvasFrameHeight,
+      index
+    )
+
+  def stretchBox(
+      minWidth: Int = 0,
+      minHeight: Int = 0,
+      contents: Option[Component] = None
+  )(s: Style): StretchBox = StretchBox(minWidth, minHeight, contents, s)
+
+  def freeBox(width: Int, height: Int, contents: List[((Int, Int), Component)])(
+      s: Style
+  ): FreeBox =
+    FreeBox(width, height, contents, s)
+
+  def row(contents: List[Component] = Nil)(s: Style): Row = Row(contents, s)
+
+  def column(contents: List[Component] = Nil)(s: Style): Column =
+    Column(contents, s)
+
+  def alpha(content: Option[Component] = None, a: Int = 1)(s: Style): Alpha =
+    Alpha(content, a, s)
