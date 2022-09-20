@@ -10,6 +10,10 @@ import org.scalajs.dom.*
   roundedRectOutlineDemoIO()
   monospaceTextDemoIO()
   textDemoIO()
+  stretchBoxDemoIO()
+  columnDemoIO()
+  rowDemoIO()
+  freeBoxDemoIO()
 
   val img = document
     .createElement("img")
@@ -67,9 +71,70 @@ def spriteFrameDemoIO(sprite: Sprite): Unit =
 
 def textDemoIO(): Unit =
   val renderer = Renderer(canvasIO("c-text-demo"))
-  val style = Style(Color.black, Color.white, Font.Monospace(16), 5, 5)
-  val text = Component.Text("Greetings, world!", style)
+  val text = Component.Text("Greetings, world!")
   text.renderIO(0, 0)(renderer)
+
+def stretchBoxDemoIO(): Unit =
+  val renderer = Renderer(canvasIO("c-stretch-box-demo"))
+
+  val style = Style(
+    backgroundColor = Color.black,
+    color = Color.white,
+    padding = Style.Padding(5, 5),
+    border = Some(Style.Border(Color.white, 5)),
+    radius = 5
+  )
+
+  val box = Component.StretchBox(
+    contents = Some(
+      Component.Text("Greetings, world!", style)
+    ),
+    style = style
+  )
+
+  renderer.clearIO(Color.black)
+  box.renderIO(5, 5)(renderer)
+
+def columnDemoIO(): Unit =
+  val renderer = Renderer(canvasIO("c-column-demo"))
+
+  val style =
+    Style(backgroundColor = Color.black, color = Color.white, columnMargin = 5)
+
+  val text = Component.Text("Greetings!", style)
+  val text2 = Component.Text("Greeting, world!", style)
+  val column = Component.Column(List(text, text2, text), style)
+  val box = Component.StretchBox(contents = Some(column), style = style)
+  box.renderIO(5, 5)(renderer)
+
+def rowDemoIO(): Unit =
+  val canvas = canvasIO("c-row-demo")
+  canvas.width = 500
+  val renderer = Renderer(canvas)
+
+  val style =
+    Style(backgroundColor = Color.black, color = Color.white, columnMargin = 5)
+
+  val text = Component.Text("Greetings!", style)
+  val text2 = Component.Text("Greeting, world!", style)
+  val row = Component.Row(List(text, text2, text), style)
+  val box = Component.StretchBox(contents = Some(row), style = style)
+  box.renderIO(5, 5)(renderer)
+
+def freeBoxDemoIO(): Unit =
+  val renderer = Renderer(canvasIO("c-free-box-demo"))
+  val text = Component.Text("Greetings, world!")
+
+  val box = Component.FreeBox(
+    300,
+    300,
+    List(
+      ((50, 50), text),
+      ((60, 60), text)
+    )
+  )
+
+  box.renderIO(10, 5)(renderer)
 
 def canvasIO(id: String): HTMLCanvasElement =
   document
