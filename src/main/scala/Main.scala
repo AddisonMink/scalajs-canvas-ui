@@ -1,4 +1,4 @@
-import canvasui.*
+import amink.canvasui.*
 
 import org.scalajs.dom.*
 

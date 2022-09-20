@@ -1,4 +1,4 @@
-package canvasui
+package amink.canvasui
 
 final case class Style(
     color: Color = Color.black,

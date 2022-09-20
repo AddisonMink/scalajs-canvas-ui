@@ -1,4 +1,4 @@
-package canvasui
+package amink.canvasui
 
 final case class Color(
     r: Int,

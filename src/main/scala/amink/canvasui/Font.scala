@@ -1,4 +1,4 @@
-package canvasui
+package amink.canvasui
 
 enum Font(val size: Int, name: String, descent: Double, halfLeading: Double):
 

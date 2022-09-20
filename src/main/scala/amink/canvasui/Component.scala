@@ -1,4 +1,4 @@
-package canvasui
+package amink.canvasui
 
 enum Component:
   import Component._
@@ -181,10 +181,10 @@ object Component:
 
   def text(txt: String)(s: Style): Text = Text(txt, s)
 
-  def sprite(sprite: canvasui.Sprite)(s: Style): Sprite =
+  def sprite(sprite: amink.canvasui.Sprite)(s: Style): Sprite =
     Sprite(sprite.name, sprite.canvasWidth, sprite.canvasHeight)
 
-  def spriteFrame(sprite: canvasui.Sprite, index: (0, 0))(
+  def spriteFrame(sprite: amink.canvasui.Sprite, index: (0, 0))(
       s: Style
   ): SpriteFrame =
     SpriteFrame(

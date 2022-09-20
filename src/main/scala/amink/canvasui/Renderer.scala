@@ -1,4 +1,4 @@
-package canvasui
+package amink.canvasui
 
 import org.scalajs.dom.*
 
