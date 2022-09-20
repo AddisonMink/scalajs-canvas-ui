@@ -9,6 +9,7 @@ import org.scalajs.dom.*
   roundedRectDemoIO()
   roundedRectOutlineDemoIO()
   monospaceTextDemoIO()
+  textDemoIO()
 
   val img = document
     .createElement("img")
@@ -63,6 +64,12 @@ def spriteFrameDemoIO(sprite: Sprite): Unit =
   val renderer = Renderer(canvasIO("sprite-frame-demo"))
   renderer.clearIO(Color.black)
   renderer.spriteFrameIO(0, 0, sprite, (1, 1))
+
+def textDemoIO(): Unit =
+  val renderer = Renderer(canvasIO("c-text-demo"))
+  val style = Style(Color.black, Color.white, Font.Monospace(16), 5, 5)
+  val text = Component.Text("Greetings, world!", style)
+  text.renderIO(0, 0)(renderer)
 
 def canvasIO(id: String): HTMLCanvasElement =
   document

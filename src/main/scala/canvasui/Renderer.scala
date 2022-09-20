@@ -60,6 +60,7 @@ class Renderer(canvas: HTMLCanvasElement):
 
   def textIO(x: Int, y: Int, text: String, font: Font, color: Color): Unit =
     ctx.fillStyle = color.cssCode
+    ctx.font = font.cssCode
     val trueY = y + font.lineHeight + font.baseLineOffset
     ctx.fillText(text, x, trueY)
 
