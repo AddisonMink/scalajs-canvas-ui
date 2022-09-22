@@ -2,7 +2,7 @@ package amink.canvasui
 
 import org.scalajs.dom.*
 
-class Renderer(canvas: HTMLCanvasElement, sprites: Map[String, Sprite] = Map()):
+class Renderer(canvas: HTMLCanvasElement):
   private val ctx = canvas
     .getContext("2d")
     .asInstanceOf[CanvasRenderingContext2D]
@@ -11,23 +11,7 @@ class Renderer(canvas: HTMLCanvasElement, sprites: Map[String, Sprite] = Map()):
     ctx.fillStyle = color.cssCode
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-  def rectIO(x: Int, y: Int, width: Int, height: Int, color: Color): Unit =
-    ctx.fillStyle = color.cssCode
-    ctx.fillRect(x, y, width, height)
-
-  def rectOutlineIO(
-      x: Int,
-      y: Int,
-      width: Int,
-      height: Int,
-      thickness: Int,
-      color: Color
-  ): Unit =
-    ctx.strokeStyle = color.cssCode
-    ctx.lineWidth = thickness
-    ctx.strokeRect(x, y, width, height)
-
-  def roundedRectIO(
+  def rectIO(
       x: Int,
       y: Int,
       width: Int,
@@ -39,7 +23,7 @@ class Renderer(canvas: HTMLCanvasElement, sprites: Map[String, Sprite] = Map()):
     roundedRectPathIO(x, y, width, height, radius)
     ctx.fill()
 
-  def roundedRectOutlineIO(
+  def rectOutlineIO(
       x: Int,
       y: Int,
       width: Int,
@@ -53,48 +37,33 @@ class Renderer(canvas: HTMLCanvasElement, sprites: Map[String, Sprite] = Map()):
     roundedRectPathIO(x, y, width, height, radius)
     ctx.stroke()
 
-  def measureTextIO(text: String, font: Font): (Int, Int) =
-    ctx.font = font.cssCode
-    val width = ctx.measureText(text).width.toInt
-    (width, font.lineHeight)
-
   def textIO(x: Int, y: Int, text: String, font: Font, color: Color): Unit =
     ctx.fillStyle = color.cssCode
     ctx.font = font.cssCode
     val trueY = y + font.lineHeight + font.baseLineOffset
     ctx.fillText(text, x, trueY)
 
-  def spriteIO(x: Int, y: Int, spriteName: String): Unit =
-    val sprite = sprites(spriteName)
-    ctx.drawImage(
-      sprite.img,
-      0,
-      0,
-      sprite.img.width,
-      sprite.img.height,
-      0,
-      0,
-      sprite.canvasWidth,
-      sprite.canvasHeight
-    )
-
-  def spriteFrameIO(
+  def imageIO(
       x: Int,
       y: Int,
-      spriteName: String,
-      index: (Int, Int)
+      width: Int,
+      height: Int,
+      imgX: Int,
+      imgY: Int,
+      imgWidth: Int,
+      imgHeight: Int,
+      img: HTMLImageElement
   ): Unit =
-    val sprite = sprites(spriteName)
     ctx.drawImage(
-      sprite.img,
-      sprite.frameWidth * index._1,
-      sprite.frameHeight * index._2,
-      sprite.frameWidth,
-      sprite.frameHeight,
-      0,
-      0,
-      sprite.canvasFrameWidth,
-      sprite.canvasFrameHeight
+      img,
+      imgX,
+      imgY,
+      imgWidth,
+      imgHeight,
+      x,
+      y,
+      width,
+      height
     )
 
   def setAlphaIO(alpha: Double): Unit =
