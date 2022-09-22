@@ -1,214 +1,93 @@
 package amink.canvasui
 
-enum Component:
+import org.scalajs.dom.HTMLImageElement
+import scala.scalajs.js.annotation.JSExportTopLevel
+
+/** Component is an ADT that represents entities that can can be rendered to the
+  * canvas.
+  *
+  * Components can be rendered to the screen with their renderIO method.
+  *
+  * Currently supported primitives are:
+  *   - Empty, the zero-value of Component algebra.
+  *   - Text, specifies plain, colored text.
+  *   - Image, specifies a rectangular slice of an image.
+  *   - Rect, species a colored rectangle with a corner radius.
+  *   - Frame, speecifies a colored rectangular frame with a corner radius.
+  *
+  * Currently supported combinators are:
+  *   - Container, contains a set of components and specifies where to render
+  *     the components relative to the Container's origin.
+  *   - Alpha, specifies to render a component with a given alpha value.
+  */
+enum Component(val width: Int, val height: Int):
   import Component._
+
+  case Empty extends Component(0, 0)
 
   case Text(
       text: String,
-      style: Style = Style()
-  )
+      font: Font,
+      color: Color
+  ) extends Component(font.textWidth(text), font.lineHeight)
 
-  case Sprite(
-      name: String,
-      width: Int,
-      height: Int
-  )
+  case Image(
+      override val width: Int,
+      override val height: Int,
+      img: HTMLImageElement,
+      imgX: Int,
+      imgY: Int,
+      imgWidth: Int,
+      imgHeight: Int
+  ) extends Component(width, height)
 
-  case SpriteFrame(
-      name: String,
-      width: Int,
-      height: Int,
-      index: (Int, Int)
-  )
+  case Rect(
+      override val width: Int,
+      override val height: Int,
+      color: Color,
+      radius: Int = 0
+  ) extends Component(width, height)
 
-  case StretchBox(
-      minWidth: Int = 0,
-      minHeight: Int = 0,
-      contents: Option[Component] = None,
-      style: Style = Style()
-  )
+  case Frame(
+      override val width: Int,
+      override val height: Int,
+      color: Color,
+      thickness: Int,
+      radius: Int = 0
+  ) extends Component(width, height)
 
-  case FreeBox(
-      width: Int = 0,
-      height: Int = 0,
-      contents: List[((Int, Int), Component)] = Nil,
-      style: Style = Style()
-  )
-
-  case Column(
-      contents: List[Component] = Nil,
-      style: Style = Style()
-  )
-
-  case Row(
-      contents: List[Component] = Nil,
-      style: Style = Style()
-  )
+  case Container(
+      override val width: Int,
+      override val height: Int,
+      components: List[(Int, Int, Component)]
+  ) extends Component(width, height)
 
   case Alpha(
-      contents: Option[Component] = None,
-      alpha: Double = 0,
-      style: Style = Style()
-  )
+      component: Component,
+      alpha: Double
+  ) extends Component(component.width, component.height)
 
-  /* A Renderer is required to get a Component's
-   * Size. The value needs to be memoized in order
-   * to avoid a lot of redundant computation.
-   */
-  private var size: Option[Size] = None
-
-  def sizeIO(r: Renderer): Size = size match
-    case Some(s) => s
-    case None =>
-      size = Some(computeSizeIO(r))
-      size.get
-
-  private def computeSizeIO(r: Renderer): Size =
-    this match
-      case Text(text, style) =>
-        val (w, h) = r.measureTextIO(text, style.font)
-        Size(w, h)
-
-      case Sprite(_, width, height) =>
-        Size(width, height)
-
-      case SpriteFrame(_, width, height, _) =>
-        Size(width, height)
-
-      case StretchBox(minWidth, minHeight, contents, style) =>
-        val Size(cWidth, cHeight) =
-          contents.fold(Size(minWidth, minHeight))(_.sizeIO(r))
-
-        val paddingWidth = style.padding.left * 2
-        val paddingHeight = style.padding.down * 2
-        val borderWidth = style.border.fold(0)(_.thickness)
-        val borderHeight = borderWidth
-        val width = Math.max(cWidth, minWidth) + paddingWidth + borderWidth
-        val height = Math.max(cHeight, minHeight) + paddingHeight + borderHeight
-        Size(width, height)
-
-      case FreeBox(width, height, _, _) => Size(width, height)
-
-      case Column(contents, style) =>
-        val width = contents.map(_.sizeIO(r).width).maxOption.getOrElse(0)
-        val contentsHeight = contents.map(_.sizeIO(r).height).sum
-        val marginHeight = Math.max(0, contents.length - 1) * style.columnMargin
-        val height = contentsHeight + marginHeight
-        Size(width, height)
-
-      case Row(contents, style) =>
-        val contentsWidth = contents.map(_.sizeIO(r).width).sum
-        val marginWidth = Math.max(0, contents.length - 1) * style.rowMargin
-        val width = contentsWidth + marginWidth
-        val height = contents.map(_.sizeIO(r).height).maxOption.getOrElse(0)
-        Size(width, height)
-
-      case Alpha(contents, _, _) =>
-        contents.fold(Size(0, 0))(_.sizeIO(r))
-
+  // TODO This can be refactored to be tail-recursive.
   def renderIO(x: Int, y: Int)(r: Renderer): Unit =
     this match
-      case Text(text, style) =>
-        r.textIO(x, y, text, style.font, style.color)
-        val (w, h) = r.measureTextIO(text, style.font)
+      case Empty =>
 
-      case Sprite(name, _, _) =>
-        r.spriteIO(x, y, name)
+      case Text(text, font, color) =>
+        r.textIO(x, y, text, font, color)
 
-      case SpriteFrame(name, _, _, index) =>
-        r.spriteFrameIO(x, y, name, index)
+      case Image(width, height, img, imgX, imgY, imgWidth, imgHeight) =>
+        r.imageIO(x, y, width, height, imgX, imgY, imgWidth, imgHeight, img)
 
-      case StretchBox(minWidth, minHeight, contents, style) =>
-        val Size(cWidth, cHeight) = contents.fold(Size(0, 0))(_.sizeIO(r))
-        val innerWidth = Math.max(cWidth, minWidth) + style.padding.left * 2
-        val innerHeight = Math.max(cHeight, minHeight) + style.padding.down * 2
+      case Rect(width, height, color, radius) =>
+        r.rectIO(x, y, width, height, radius, color)
 
-        if style.radius == 0 then
-          r.rectIO(x, y, innerWidth, innerHeight, style.backgroundColor)
-        else
-          r.roundedRectIO(
-            x,
-            y,
-            innerWidth,
-            innerHeight,
-            style.radius,
-            style.backgroundColor
-          )
+      case Frame(width, height, color, thickness, radius) =>
+        r.rectOutlineIO(x, y, width, height, thickness, radius, color)
 
-        (style.border, style.radius) match
-          case (Some(b), 0) =>
-            r.rectOutlineIO(x, y, innerWidth, innerHeight, b.thickness, b.color)
-          case (Some(b), radius) =>
-            r.roundedRectOutlineIO(
-              x,
-              y,
-              innerWidth,
-              innerHeight,
-              b.thickness,
-              radius,
-              b.color
-            )
-          case _ =>
+      case Container(width, height, components) =>
+        components.foreach((ox, oy, c) => c.renderIO(x + ox, y + oy)(r))
 
-        contents.foreach(
-          _.renderIO(x + style.padding.left, y + style.padding.down)(r)
-        )
-
-      case FreeBox(width, height, contents, style) =>
-        contents.foreach { case ((offsetX, offsetY), c) =>
-          c.renderIO(x + offsetX, y + offsetY)(r)
-        }
-
-      case Column(contents, style) =>
-        contents.foldLeft(0) { (offset, c) =>
-          c.renderIO(x, y + offset)(r)
-          offset + c.sizeIO(r).height + style.columnMargin
-        }
-
-      case Row(contents, style) =>
-        contents.foldLeft(0) { (offset, c) =>
-          c.renderIO(x + offset, y)(r)
-          offset + c.sizeIO(r).width + style.rowMargin
-        }
-
-      case Alpha(contents, alpha, _) =>
+      case Alpha(component, alpha) =>
         r.setAlphaIO(alpha)
-        contents.foreach(_.renderIO(x, y)(r))
+        component.renderIO(x, y)(r)
         r.resetAlphaIO()
-
-object Component:
-  case class Size(width: Int, height: Int)
-
-  def text(txt: String)(s: Style): Text = Text(txt, s)
-
-  def sprite(sprite: amink.canvasui.Sprite)(s: Style): Sprite =
-    Sprite(sprite.name, sprite.canvasWidth, sprite.canvasHeight)
-
-  def spriteFrame(sprite: amink.canvasui.Sprite, index: (0, 0))(
-      s: Style
-  ): SpriteFrame =
-    SpriteFrame(
-      sprite.name,
-      sprite.canvasFrameWidth,
-      sprite.canvasFrameHeight,
-      index
-    )
-
-  def stretchBox(
-      minWidth: Int = 0,
-      minHeight: Int = 0,
-      contents: Option[Component] = None
-  )(s: Style): StretchBox = StretchBox(minWidth, minHeight, contents, s)
-
-  def freeBox(width: Int, height: Int, contents: List[((Int, Int), Component)])(
-      s: Style
-  ): FreeBox =
-    FreeBox(width, height, contents, s)
-
-  def row(contents: List[Component] = Nil)(s: Style): Row = Row(contents, s)
-
-  def column(contents: List[Component] = Nil)(s: Style): Column =
-    Column(contents, s)
-
-  def alpha(content: Option[Component] = None, a: Int = 1)(s: Style): Alpha =
-    Alpha(content, a, s)

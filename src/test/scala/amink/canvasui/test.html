@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h1>Component Tests</h1>
+
+    <h2>Behavior of Component.Empty</h2>
+    <h3>Should do nothing.</h3>
+    <canvas id="empty"></canvas>
+
+    <h2>Behavior of Component.Text</h2>
+    <h3>Should render text.</h3>
+    <canvas id="text"></canvas>
+    <h3>Should render big text.</h3>
+    <canvas id="big-text"></canvas>
+
+    <h2>Behavior of Component.Image</h2>
+    <h3>Should render a whole image.</h3>
+    <canvas id="image"></canvas>
+    <h3>Should render a slice of an image.</h3>
+    <canvas id="image-slice"></canvas>
+
+    <h2>Behavior of Component.Rect</h2>
+    <h3>Should render a rectangle.</h3>
+    <canvas id="rect"></canvas>
+    <h3>Should render a rounded rectangle.</h3>
+    <canvas id="rounded-rect"></canvas>
+
+    <h2>Behavior of Component.Frame</h2>
+    <h3>Should render a frame.</h3>
+    <canvas id="frame"></canvas>
+    <h3>Should render a rounded frame.</h3>
+    <canvas id="rounded-frame"></canvas>
+
+    <h2>Behavior of Component.Container</h2>
+    <h3>Should render all children relative to the container's origin.</h3>
+    <canvas id="container"></canvas>
+
+    <h2>Behavior of Component.Alpha</h2>
+    <h3>Should render its child with an alpha value.</h3>
+    <canvas id="alpha"></canvas>
+
+    <h1>ComponentUtils Tests</h1>
+
+    <h2>Behavior of text.</h2>
+    <h3>Should render text.</h3>
+    <canvas id="c-text"></canvas>
+    <h3>Should render text with a background color.</h3>
+    <canvas id="c-text-background"></canvas>
+    <h3>Should render centered text.</h3>
+    <canvas id="c-text-centered"></canvas>
+    <h3>Should render right-aligned text.</h3>
+    <canvas id="c-text-right"></canvas>
+
+    <h2>Behavior of sprite.</h2>
+    <h3>Should render an image.</h3>
+    <canvas id="c-sprite"></canvas>
+
+    <h2>Behavior of spriteFrame.</h2>
+    <h3>Should render a frame of a sprite sheet.</h3>
+    <canvas id="c-sprite-frame"></canvas>
+
+    <h2>Behavior of box.</h2>
+    <h3>Should render a square box with no border.</h3>
+    <canvas id="c-box"></canvas>
+    <h3>Should render a square box with a border.</h3>
+    <canvas id="c-box-border"></canvas>
+    <h3>Should render a rounded box with no border.</h3>
+    <canvas id="c-box-rounded"></canvas>
+    <h3>Should render a rounded box with a border.</h3>
+    <canvas id="c-box-border-rounded"></canvas>
+    <h3>Should render a box with padding.</h3>
+    <canvas id="c-box-padding"></canvas>
+    <h3>Should align child horizontally center.</h3>
+    <canvas id="c-box-h-center"></canvas>
+    <h3>Should align child right.</h3>
+    <canvas id="c-box-right"></canvas>
+    <h3>Should align child vertically center.</h3>
+    <canvas id="c-box-v-center"></canvas>
+    <h3>Should align child bottom.</h3>
+    <canvas id="c-box-bottom"></canvas>
+    <h3>Should render child with alpha.</h3>
+    <canvas id="c-box-alpha"></canvas>
+    <h3>Should shrink to fit child if no dimensions are given.</h3>
+    <canvas id="c-box-shrink"></canvas>
+    <h3>Should account for border when calculating dimensions.</h3>
+    <canvas id="c-box-size"></canvas>
+    <h3>Should account for border when aligning child.</h3>
+    <canvas id="c-box-border-align"></canvas>
+
+    <h2>Behavior of row.</h2>
+    <h3>Should render an empty row.</h3>
+    <canvas id="c-row-empty"></canvas>
+    <h3>Should render a non-empty row.</h3>
+    <canvas id="c-row"></canvas>
+
+    <h2>Behavior of column.</h2>
+    <h3>Should render an empty column.</h3>
+    <canvas id="c-col-empty"></canvas>
+    <h3>Should render a non-empty column.</h3>
+    <canvas id="c-col"></canvas>
+
+    <script src="../../../../../target/scala-3.2.0/canvas-ui-test-fastopt/main.js"></script>
+</body>
+
+</html>
