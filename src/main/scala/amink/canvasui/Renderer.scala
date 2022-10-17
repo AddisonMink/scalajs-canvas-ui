@@ -2,7 +2,7 @@ package amink.canvasui
 
 import org.scalajs.dom.*
 
-class Renderer(canvas: HTMLCanvasElement):
+final class Renderer(canvas: HTMLCanvasElement):
   private val ctx = canvas
     .getContext("2d")
     .asInstanceOf[CanvasRenderingContext2D]
