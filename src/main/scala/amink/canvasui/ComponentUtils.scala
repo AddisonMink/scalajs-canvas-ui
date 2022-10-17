@@ -44,7 +44,7 @@ object ComponentUtils:
     * @return
     *   Component
     */
-  def sprite(sprite: Sprite): Component =
+  def sprite(sprite: Sprite, tint: Option[Color] = None): Component =
     Image(
       sprite.canvasWidth,
       sprite.canvasHeight,
@@ -52,7 +52,8 @@ object ComponentUtils:
       0,
       0,
       sprite.img.width,
-      sprite.img.height
+      sprite.img.height,
+      tint
     )
 
   /** Specifies a frame of a sprite sheet.
@@ -64,7 +65,11 @@ object ComponentUtils:
     * @return
     *   Component
     */
-  def spriteFrame(sprite: Sprite, index: (Int, Int)): Component =
+  def spriteFrame(
+      sprite: Sprite,
+      index: (Int, Int),
+      tint: Option[Color] = None
+  ): Component =
     Image(
       sprite.canvasFrameWidth,
       sprite.canvasFrameHeight,
@@ -72,7 +77,8 @@ object ComponentUtils:
       index._1 * sprite.frameWidth,
       index._2 * sprite.frameHeight,
       sprite.frameWidth,
-      sprite.frameHeight
+      sprite.frameHeight,
+      tint
     )
 
   /** General purpose container. Analagous to a div in HTML.

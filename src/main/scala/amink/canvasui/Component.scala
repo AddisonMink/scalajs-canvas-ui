@@ -38,7 +38,8 @@ enum Component(val width: Int, val height: Int):
       imgX: Int,
       imgY: Int,
       imgWidth: Int,
-      imgHeight: Int
+      imgHeight: Int,
+      tint: Option[Color]
   ) extends Component(width, height)
 
   case Rect(
@@ -75,8 +76,19 @@ enum Component(val width: Int, val height: Int):
       case Text(text, font, color) =>
         r.textIO(x, y, text, font, color)
 
-      case Image(width, height, img, imgX, imgY, imgWidth, imgHeight) =>
-        r.imageIO(x, y, width, height, imgX, imgY, imgWidth, imgHeight, img)
+      case Image(width, height, img, imgX, imgY, imgWidth, imgHeight, tint) =>
+        r.imageIO(
+          x,
+          y,
+          width,
+          height,
+          imgX,
+          imgY,
+          imgWidth,
+          imgHeight,
+          img,
+          tint
+        )
 
       case Rect(width, height, color, radius) =>
         r.rectIO(x, y, width, height, radius, color)

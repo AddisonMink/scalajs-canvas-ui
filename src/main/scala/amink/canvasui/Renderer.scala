@@ -52,7 +52,8 @@ final class Renderer(canvas: HTMLCanvasElement):
       imgY: Int,
       imgWidth: Int,
       imgHeight: Int,
-      img: HTMLImageElement
+      img: HTMLImageElement,
+      tint: Option[Color]
   ): Unit =
     ctx.drawImage(
       img,
@@ -65,6 +66,21 @@ final class Renderer(canvas: HTMLCanvasElement):
       width,
       height
     )
+
+    tint.foreach { case Color(r, g, b) =>
+      val imageData = ctx.getImageData(x, y, width, height)
+
+      imageData.data.zipWithIndex.foreach((byte, i) =>
+        i % 4 match
+          case 0 => imageData.data(i) = (byte + r) / 2
+          case 1 => imageData.data(i) = (byte + g) / 2
+          case 2 => imageData.data(i) = (byte + b) / 2
+          case 3 => byte
+      )
+
+      // ctx.globalCompositeOperation = "lighter"
+      ctx.putImageData(imageData, x, y)
+    }
 
   def setAlphaIO(alpha: Double): Unit =
     ctx.globalAlpha = alpha

@@ -36,10 +36,13 @@ object ComponentTests:
 
   img.onload = _ =>
     Component
-      .Image(128, 96, img, 0, 0, 64, 48)
+      .Image(128, 96, img, 0, 0, 64, 48, None)
       .renderIO(0, 0)(renderer("image", width = 200))
     Component
-      .Image(32, 32, img, 16, 16, 16, 16)
+      .Image(128, 96, img, 0, 0, 64, 48, Some(Color.red))
+      .renderIO(0, 0)(renderer("image-tint", width = 200))
+    Component
+      .Image(32, 32, img, 16, 16, 16, 16, None)
       .renderIO(0, 0)(renderer("image-slice"))
   img.src = "images/ghoul.png"
 
